@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Tomoru Netflix OTP</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      padding-top: 50px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #4da6ff;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tomoru Netflix OTP</h1>
+  <p>กรุณากรอกอีเมล Netflix ที่ลูกค้าซื้อมา</p>
+  <input type="text" id="email" placeholder="Email Address">
+  <br>
+  <button onclick="findOTP()">ค้นหาอีเมล</button>
+  <p id="result" style="margin-top: 30px; font-size: 18px;"></p>
+
+  <script>
+    function findOTP() {
+      const email = document.getElementById('email').value;
+      const result = document.getElementById('result');
+
+      fetch(`https://script.google.com/macros/s/AKfycby5i1Q8JSwhjBOEEGIvrSi5N3mjR4dKywRNtSVigEysMed0liUPZ5Ru7ZXFBY_VZ450/exec?email=${email}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "found") {
+            result.innerHTML = `✅ OTP ของคุณคือ: <b>${data.otp}</b>`;
+          } else {
+            result.innerHTML = "❌ ไม่พบอีเมล หรือ OTP หมดอายุแล้ว";
+          }
+        })
+        .catch(err => {
+          result.innerHTML = "⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ";
+        });
+    }
+  </script>
+</body>
+</html>
