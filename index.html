@@ -42,7 +42,7 @@
       return;
     }
 
-    fetch(`https://script.google.com/macros/s/AKfycby5i1Q8JSwhjBOEEGIvrSi5N3mjR4dKywRNtSVigEysMed0liUPZ5Ru7ZXFBY_VZ450/exec?email=${encodeURIComponent(email)}`)
+    fetch(`https://script.google.com/macros/s/AKfycbzPbo0ets66PFdmsYlfkehbuyPyO-dWoVKQumKiDjLoUb4SPqY6nsw_bXHnG_yR8aTu/exec?email=${encodeURIComponent(email)}`)
       .then(res => res.json())
       .then(data => {
         if (data.status === "not_found") {
