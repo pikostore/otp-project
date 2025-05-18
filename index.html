@@ -33,33 +33,37 @@
   <p id="result" style="margin-top: 30px; font-size: 18px;"></p>
 
   <script>
-  function findOTP() {
-    const email = document.getElementById('email').value.trim();
-    const result = document.getElementById('result');
+    function findOTP() {
+      const email = document.getElementById('email').value.trim();
+      const result = document.getElementById('result');
 
-    if (!email) {
-      result.innerHTML = "⚠️ กรุณากรอกอีเมลก่อน";
-      return;
+      if (!email) {
+        result.innerHTML = "⚠️ กรุณากรอกอีเมลก่อน";
+        return;
+      }
+
+      fetch(`https://script.google.com/macros/s/AKfycbzb_Epe3MFYt0RcgLIAjC46GPVqVWrWD-eE2IBRaLn2w1hXm5VZ3kuT0sNVs9543__E/exec?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "not_found") {
+            result.innerHTML = "❌ ไม่พบอีเมลนี้ในระบบ";
+          } else if (data.status === "found" && (!data.otp || data.otp === "")) {
+            result.innerHTML = "⚠️ อีเมลนี้ไม่มี OTP หรือ OTP หมดอายุแล้ว";
+          } else if (data.status === "found") {
+            // แปลงเวลาให้อ่านง่าย
+            const time = new Date(data.time);
+            const timeStr = time.toLocaleTimeString("th-TH", { hour: '2-digit', minute: '2-digit' });
+
+            result.innerHTML = `✅ OTP ของคุณคือ: <b>${data.otp}</b> <br>🕒 เวลา: ${timeStr}`;
+          } else {
+            result.innerHTML = "⚠️ เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          result.innerHTML = "⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ";
+        });
     }
-
-    fetch(`https://script.google.com/macros/s/AKfycbwWGWcigdo_V3TUcLyE-HT4iCWiFp6lw1tx4cVV_2b23wbnUrzdk1nY92pTtzUGoFOy/exec?email=${encodeURIComponent(email)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "not_found") {
-          result.innerHTML = "❌ ไม่พบอีเมลนี้ในระบบ";
-        } else if (data.status === "found" && (!data.otp || data.otp === "")) {
-          result.innerHTML = "⚠️ อีเมลนี้ไม่มี OTP หรือ OTP หมดอายุแล้ว";
-        } else if (data.status === "found") {
-          result.innerHTML = `✅ OTP ของคุณคือ: <b>${data.otp}</b>`;
-        } else {
-          result.innerHTML = "⚠️ เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        result.innerHTML = "⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ";
-      });
-  }
-</script>
+  </script>
 </body>
 </html>
