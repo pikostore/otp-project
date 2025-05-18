@@ -34,10 +34,15 @@
 
   <script>
     function findOTP() {
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const result = document.getElementById('result');
 
-      fetch(https://script.google.com/macros/s/AKfycby5i1Q8JSwhjBOEEGIvrSi5N3mjR4dKywRNtSVigEysMed0liUPZ5Ru7ZXFBY_VZ450/exec?email=${email})
+      if (!email) {
+        result.innerHTML = "⚠️ กรุณากรอกอีเมลก่อน";
+        return;
+      }
+
+      fetch(`https://script.google.com/macros/s/AKfycby5i1Q8JSwhjBOEEGIvrSi5N3mjR4dKywRNtSVigEysMed0liUPZ5Ru7ZXFBY_VZ450/exec?email=${encodeURIComponent(email)}`)
         .then(res => res.json())
         .then(data => {
           if (data.status === "found") {
@@ -47,6 +52,7 @@
           }
         })
         .catch(err => {
+          console.error(err);
           result.innerHTML = "⚠️ เกิดข้อผิดพลาดในการเชื่อมต่อ";
         });
     }
